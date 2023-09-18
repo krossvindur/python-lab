@@ -186,6 +186,7 @@ else:
     print("Nada.", end='\n\n')
 
 # in python, for iterates over items of any sequence
+# (note: in can be used in other places, not just for)
 words = ['cat', 'window', 'defenestrate']
 for w in words:
     print(w, len(w))
@@ -385,6 +386,7 @@ match_points([Point(-1,1)])
 match_points([Point(1,2)])
 print("")
 
+# NOTE: CHAPTER 5: FUNCTIONS
 # and just like that you have seen how to define functions!
 def my_function(args):
     """Always use a docstring (I think they are in PEP 257)"""
@@ -397,4 +399,145 @@ def my_function_returns(args):
     pass
 
 print(my_function_returns(1), end='\n\n')
+
+# as does a lonely return
+def my_function_returns():
+    """Always remember the docstring.
+    """
+    if True:
+        return
+    
+print(my_function_returns(), end='\n\n')
+
+# python uses call by object value, i. e., if a mutable object
+# is passed, the caller will see any changes the callee makes to it
+alist = [1]
+print(alist)
+
+def afunction(arg):
+    arg.extend([2, 3, 4])
+    return 0
+
+afunction(alist)
+print(alist, end='\n\n')
+
+# the function is an object
+print(alist)
+f = afunction
+f(alist)
+print(alist, end='\n\n')
+
+# a function can be defined with a variable number of arguments
+# 1: by using default values
+def one(arg1, arg2 = 'I\'m an arg'):
+    print(arg1, arg2)
+
+one(1)
+print()
+
+# default values are evaluated at function definition in the
+# defining scope
+i = 5
+
+def f(arg = i):
+    print(arg)
+
+i = 6
+f()
+print()
+
+# default values are evaluated only once, so be aware
+def f(arg1, arg2 = []):
+    arg2.append(arg1)
+    return arg2
+
+print(f(1))
+print(f(2))
+print(f(3))
+print()
+
+# if this is not the intended behaviour, then
+def f(arg1, arg2 = None):
+    if arg2 is None:
+        arg2 = []
+    arg2.append(arg1)
+    return arg2
+
+print(f(1))
+print(f(2))
+print(f(3))
+print()
+
+# things got a little messy in the tutorial, so I'm trying to
+# clean it up for better understanding...
+# a function definition, in general, looks like this
+# def name(pos1, pos2, /, key_or_pos1, key_or_pos2, *, kwarg1, kwarg2)
+# where pos is positional and kw is keyword
+# / and * are optional
+# above, / indicates that pos1 and pos2 are positional only
+# and * indicates that kwarg1 and kwarg2 are keyword only
+# whatever comes in between them may be used either
+# as positional or keyword
+# but if / and * are not present, arguments can be passed
+# by position or by keyword
+# order is not important for keyword arguments
+# if you do something like f(name, **kwargs) and there is a 'name' key
+# in kwargs, you get a 'multiple values error'
+# (since name parameter can be either positional or keyword)
+# but if you change it to f(name, /, **kwargs) then it is ok
+
+# figure this one out
+def f(a, b, /, c, *d, e, f, **g):
+    print(a, b, c, d, e, f, g)
+
+f('a', 'b', 'c', 'd', 'd', 'd', e='e', f='f', **{'h':'h', 'i':'i'})
+print()
+
+# if arguments are in a list / tuple or dict, they need to be unpacked
+# by using * (list/tuple) or ** (dict)
+args = [3, 6]
+print(list(range(*args)))
+
+def area(width, height):
+    print(width*height)
+
+args = {'width': 5, 'height': 7}
+area(**args)
+print()
+
+# lambda expressions are single expression anonymous functions,
+# to be use wherever function objects are needed.
+
+def make_incrementor(n):
+    """Remember: remember the docstring (summary)
+    
+    Just remember it, always, really (description)
+    (note that the previous line and this one
+    are indented by 4 spaces)
+    """
+    return lambda x: x + n
+
+inc = make_incrementor(3)
+print(inc(3))
+print(inc(4))
+
+pairs = [(1, 'one'), (2, 'two'), (3, 'three'), (4, 'four')]
+print(pairs)
+pairs.sort(key=lambda pair:pair[1])
+print(pairs)
+print()
+
+# you can also annotate
+def food(ham: str, eggs: str = 'eggs') -> str:
+    print("Annotations:", food.__annotations__)
+    print("Arguments:", ham, eggs)
+    return ham + " and " + eggs
+
+print(food('spam'))
+print()
+
+# NOTE: CHAPTER 6: DATA STRUCTURES
+
+# you can turn lists into stacks by using append(n) and pop()
+# but for queues, it is better to use "from collections import deque"
 

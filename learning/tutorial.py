@@ -541,3 +541,114 @@ print()
 # you can turn lists into stacks by using append(n) and pop()
 # but for queues, it is better to use "from collections import deque"
 
+# list comprehensions: a simple way to create lists without side effects
+# comprehensions are good to filter and extend lists
+# form:
+# [expression for clause (other for or if clauses)]
+# the expression will be evaluated in the context of the
+# for or if clauses
+squares = [x**2 for x in range(10)]
+# which is equivalent to
+# squares = list(map(lambda x: x**2, range(10)))
+print(squares)
+
+diffs = [(x, y) for x in [2, 1, 3] for y in [3, 1, 4] if x != y]
+print(diffs)
+
+vec = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+flat = [num for elem in vec for num in elem]
+print(vec)
+print(flat)
+
+matrix = [
+    ['a', 'b', 'c', 'd'],
+    ['e', 'f', 'g', 'h'],
+    ['i', 'j', 'l', 'm']
+]
+
+trans = [[row[i] for row in matrix] for i in range(4)]
+print(matrix)
+print(trans)
+print()
+
+# del: another way to remove items from lists
+alist = [0, 1, 2, 2, 3, 3, 4, 4, 4, 5]
+print(alist)
+del alist[2]
+print(alist)
+del alist[4:7]
+print(alist)
+del alist[:]
+print(alist)
+print()
+
+# now, tuples:
+t = (34, 43, 'hi')
+print(t)
+
+# like lists, tuples can be nested and can contain mutable objects
+# the parenthesis are not needed here, but they are good for clarity
+u = (t, (33, 44, 45, 54, 'hello'))
+print(u)
+
+s = (u, ['a', 'b', 'c'])
+print(s)
+s[1][1] = 'B'
+print(s)
+print()
+
+# and like strings, tuples are immutable
+# don't do it! will throw TypeError:
+# object does not support item assignment
+# u[0] = 11, 22, 33
+
+# creating an empty tuple
+empty = ()
+print(empty)
+
+# creating a single value tuple
+single = ('just the one',)
+print(single)
+print()
+
+# this is packing
+pack = ('one', 2, '3')
+print(pack)
+
+# this is unpacking
+# (and it works for any sequence on the right-hand side)
+a, b, c = pack
+print(a, b, c)
+print()
+
+# sets
+# an empty set (careful: using {} creates an empty dict)
+basket = set()
+print(basket)
+basket = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
+# no duplicates, 'cause its a set
+print(basket)
+
+# membership testing
+print('orange in basket?', 'orange' in basket)
+print('what about papaya?', 'papaya' in basket)
+print()
+
+# creating sets of unique letters from words
+# (remember: sets are unordered)
+a = set('abracadabra')
+b = set('alacazam')
+print(a)
+print(b)
+print()
+print(a-b)
+print(a|b)
+print(a&b)
+print(a^b)
+print()
+
+# like lists, set comprehensions are also possible
+a = {x for x in 'abracadabra' if x not in 'abc'}
+print(a)
+print()
+

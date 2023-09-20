@@ -322,32 +322,32 @@ print("")
 # note that it matches not only values, but patterns and values
 # it peels the data and can be used to bind variables
 # (something similar to unpacking, like x, y = my_tuple)
-print("COMMAND ME, MASTER:")
-command = input("> ")
-exits = ["back", "forth", "forward", "backwards"]
+# print("COMMAND ME, MASTER:")
+# command = input("> ")
+# exits = ["back", "forth", "forward", "backwards"]
 
-match command.split():
-    # *_ can be used, if binding is not wanted
-    case ["drop", *objects]:
-        print("\nYou drop:")
-        for obj in objects:
-            print(obj)
-        print("And then you fall. Forever.")
-    case ["run", "fast"]:
-        print("\nYou run fast. And then you fall. Forever.")
-    case ["run", "slowly"]:
-        print("\nYou run slowly. You keep running slowly. " 
-              "And then you fall. Forever.")
-    case ["go", ("north" | "south" | "east" | "west") as direction]:
-        print(f"\nYou go {direction}. And then you fall. Forever.")
-    case ["go", direction] if direction in exits:
-        print(f"\nYou try to go {direction}. And then you fall. "
-              "Forever.")
-    case ["help"]:
-        print('\nYou cry for help. And then you fall. Forever.')
-    case _:
-        print("\nYou just fall. Forever.")
-print("")
+# match command.split():
+#     # *_ can be used, if binding is not wanted
+#     case ["drop", *objects]:
+#         print("\nYou drop:")
+#         for obj in objects:
+#             print(obj)
+#         print("And then you fall. Forever.")
+#     case ["run", "fast"]:
+#         print("\nYou run fast. And then you fall. Forever.")
+#     case ["run", "slowly"]:
+#         print("\nYou run slowly. You keep running slowly. " 
+#               "And then you fall. Forever.")
+#     case ["go", ("north" | "south" | "east" | "west") as direction]:
+#         print(f"\nYou go {direction}. And then you fall. Forever.")
+#     case ["go", direction] if direction in exits:
+#         print(f"\nYou try to go {direction}. And then you fall. "
+#               "Forever.")
+#     case ["help"]:
+#         print('\nYou cry for help. And then you fall. Forever.')
+#     case _:
+#         print("\nYou just fall. Forever.")
+# print("")
 
 # the following is also useful, it is about match points
 class Point:
@@ -641,14 +641,145 @@ b = set('alacazam')
 print(a)
 print(b)
 print()
-print(a-b)
-print(a|b)
-print(a&b)
-print(a^b)
+print(a - b)
+print(a | b)
+print(a & b)
+print(a ^ b)
+# a ^ b can also be
+print((a|b) - (a&b))
+print((a|b) - (a&b) == a^b)
 print()
 
 # like lists, set comprehensions are also possible
 a = {x for x in 'abracadabra' if x not in 'abc'}
 print(a)
 print()
+
+# dictionaries, or dicts, are indexed by keys
+# a key can be any immutable type: strings and numbers
+# can be used, tuples can be used (if composed of strings, numbers
+# and tuples); lists cannot be used
+# dicts: a set of key:value pairs where the keys are unique
+
+# an empty dictionary
+empty = {}
+print(empty)
+
+tel = {'jack': 4098, 'sape': 4139}
+tel['guida'] = 4127
+print(tel)
+print(tel['guida'])
+del tel['jack']
+print(tel)
+tel['ivy'] = 4439
+print(tel)
+print(list(tel))
+print(sorted(tel))
+print('Is ivy in tel?', 'ivy' in tel)
+print('What about brendon?', 'brendon' in tel)
+print('I hear sape is not in tel...:', 'sape' not in tel)
+print()
+
+# if you have a list of key-value pairs, use dict to create a dict
+mylist = [('uno', 1), ('dos', 2), ('tres', 3), ('catorze', 14)]
+print(mylist)
+count = dict(mylist)
+print(count)
+print(count['catorze'])
+print()
+
+# but when keys are strings, it may be easier just to...
+mylist = dict(uno=1, dos=2, tres=3, catorze=14)
+print(mylist)
+print()
+
+# dicts also support comprehensions
+squares = {x: x**2 for x in (3, 6, 9)}
+print(squares)
+print()
+
+# looping
+# when looping through dicts, key:value pairs can be obtained
+# by using items()
+knights = {
+    'galahad': 'the doubtful',
+    'robin': 'the fearful',
+    'ionas': 'the zombie'
+}
+
+for name, title in knights.items():
+    print(name, title)
+print()
+
+# when looping through a sequence, here's a way to obtain
+# the index and the corresponding value
+actions = ['ping', 'pong', 'pang!']
+for idx, action in enumerate(actions):
+    print(idx, action)
+print()
+
+# looping over 2 or more sequences at a time
+questions = [
+    'name',
+    'quest',
+    'favorite color'
+]
+answers = [
+    'lancelot',
+    'the holy grail',
+    'bluish purplish reddish black',
+]
+
+for q, a in zip(questions, answers):
+    print('What is your {0}? It is {1}.'.format(q, a))
+print()
+
+# how about in reverse?
+for q, a in zip(reversed(questions), reversed(answers)):
+    print('What is your {}? It is {}.'.format(q, a))
+print()
+
+# conditions
+# in, not in: membership test
+# is, is not: wether 2 objects are the same object
+# <, >, <=, >=, ==, != 
+# all of the above have the same priority
+# and, or, not: not > and > or 
+# so not a and b or c is the same as ((not a) and b) or c
+# and, or are short-circuit operators
+# when used on values other than Booleans, this is what happens
+s1, s2, s3 = '', 'Trondheim', 'Hammer Dance'
+result = s1 or s2 or s3
+print(result)
+print()
+
+# it is possible to have assignments in expressions like in C,
+# but we have to use :=
+# while (name := input("State your name: ")):
+#     if (name.lower() != 'q'):
+#         print('Hello, {}!'.format(name))
+#     else:
+#         break
+
+# comparing sequences:
+# lexicographical ordering is used, in which the first item
+# of sequence a is compared to the first item of sequence b
+# and so on; if one comparison differ, then the sequences are not equal
+# if 2 items being compared are themselves sequences of the same type
+# the lexicographical ordering is again used, recursively
+# the comparison goes until either sequence is exhausted
+# the first to be exhausted is the smaller one
+
+# NOTE: CHAPTER 7: MODULES
+# through "import module_name", the contents of the respective module
+# are added to the current namespace through the module name
+# ("module_name", in this case, or any alias when using
+# "import module_name as my_module")
+
+# if you want to bring the module contents directly into the
+# current namespace, you can use from module_name import name,
+# or from module_name import name as my_name or
+# from module_name import * (which will import all names except
+# those beginning with _, but this is frowned upon except when
+# in interactive mode, for it usually causes poorly readable code.
 

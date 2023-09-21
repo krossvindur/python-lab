@@ -783,3 +783,39 @@ print()
 # those beginning with _, but this is frowned upon except when
 # in interactive mode, for it usually causes poorly readable code.
 
+# when a module is imported, its code is executed. if you run the
+# module as a script (e.g. python prime.py 101), its __name__ is
+# set to "__main__". so if you use the following code in your module,
+# it only gets executed as a script, not when importing it as a mudule,
+# making it usable as both a script and an importable module:
+# if __name__ == "__main__":
+#     import sys
+#     prime(int(sys.argv[1]))
+# of course, if the called function takes no argument, then importing
+# sys won't be necessary.
+
+# module search path
+# import a_module
+# searches for a_module in sys.builtin_module_names
+# if not found, searches for a_module.py in sys.path
+# for more info, see PEP 3147
+
+# to see a list of builtin functions and variables, 
+# import builtins module
+
+# from package import item
+# item can be package, module, function, class, variable
+# import item.subitem.subsubitem
+# item and subitem must be packages and subsubitem must be
+# a package or a module
+
+# from package import item is the preferred choice, unless
+# when there is the need to use "item" with the same name
+# from different packages
+
+# for intra-package references, "." and ".." can be used
+# except in the main module
+
+# NOTE: CHAPTER 8: In & Out
+# see https://docs.python.org/3/library/string.html#formatstrings
+

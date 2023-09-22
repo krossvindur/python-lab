@@ -1,0 +1,3 @@
+A string is fine.
+('but this', 'must', 'b', 'converted', 4)
+['as', 'this', '.']

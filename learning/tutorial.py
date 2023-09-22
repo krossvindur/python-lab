@@ -819,3 +819,148 @@ print()
 # NOTE: CHAPTER 8: In & Out
 # see https://docs.python.org/3/library/string.html#formatstrings
 
+first_name = 'Uklund'
+last_name = 'Tuurvilsen'
+print(f"My name is {first_name + ' ' + last_name}.")
+print(f"My name is {first_name} {last_name}.")
+print("My name is {} {}.".format(first_name, last_name))
+print("My name is {} {}.".format(last_name, first_name))
+print("My name is {0} {1}.".format(first_name, last_name))
+print("My name is {1} {0}.".format(last_name, first_name))
+print("My name is {first} {last}.".format(first=first_name, last=last_name))
+print("My name is {0} {last}.".format(first_name, last=last_name))
+print()
+
+for x in range (1, 11):
+    print('{0:2d} {1:3d} {2:4d}'.format(x, x*x, x*x*x))
+print()
+
+# for old string formatting, check
+# https://docs.python.org/3/library/stdtypes.html#old-string-formatting
+
+# for file handling, UTF-8 is the standard encoding
+# and, remember: DBES - decode bytes, encode strings
+# also, be aware of the encoding of some terminals:
+# they don't work with UTF-8 (like Windows...)
+# so, whenever possible, for maximum safety,
+# use ASCII characters, mainly if the code is global
+
+# it is better to use with clause with files, since
+# it assures their closure; if with is not used,
+# then file.close() must be invoked
+with open("my_file.txt", encoding='utf-8') as file:
+    read_data = file.read()
+    print(read_data)
+print(file.closed)
+print()
+
+# it's cool to iterate over the lines of an open file
+with open("my_file.txt", mode='r', encoding='utf-8') as file:
+    for line in file:
+        print(line, end='')
+print()
+
+# if lines as a list is the way to go...
+with open("my_file.txt", encoding='utf-8') as file:
+    for line in file.readlines():
+        print(line, end='')
+print()
+
+# end='' above means that each line already includes a \n from the file
+
+# for writing, strings are ok; other objects need to be converted
+# to a string or to a bytes obj
+# (write returns the numbers of characters written)
+with open("my_file.txt", mode='w', encoding='utf-8') as file:
+    file.write('A string is fine.\n')
+    file.write(str(('but this', 'must', 'b', 'converted', 4)))
+    file.write('\n')
+    file.write(str(['as', 'this', '.']))
+    file.write('\n')
+
+with open('my_file.txt', encoding='utf-8') as file:
+    print('1st reading:')
+    for line in file:
+        print(line, end='')
+    print('\n2nd reading:')
+    file.seek(5, 0)
+    for line in file:
+        print(line, end='')
+print()
+
+with open('my_file.bin', mode='w+b') as file:
+    file.write(b'0123456789abcdef')
+    file.seek(5) # same as seek(5, 0)
+    print(file.read(1))
+    file.seek(-2, 1)
+    print(file.read(2))
+    file.seek(-3, 2)
+    print(file.read(5))
+print()
+
+# using JSON
+import json
+data = (1, 'simple', 'piece of data')
+print(json.dumps(data))
+print()
+
+with open('my_file.json', mode='w', encoding='utf-8') as file:
+    json.dump(data, file)
+
+with open('my_file.json', encoding='utf-8') as file:
+    # as data was originally a tuple
+    data = tuple(json.load(file))
+    print(data)
+    print()
+
+# the simple serialization / deserialization above works well with
+# tuples and lists and dicts, but it will require extra effort for
+# arbitrary class instances
+
+# NOTE: CHAPTER 9: ERRORS AND EXCEPTIONS
+
+# while True:
+#     try:
+#         x = int(input('Please give me a number: '))
+#         break
+#     except ValueError:
+#         print('Whoa! Not a number, pal. Try again.')
+
+# while True:
+#     try:
+#         x = int(input('Please give me a number: '))
+#         break
+#     except ValueError:
+#         print('Whoa! Not a number, pal. Try again.')
+#     except:
+#         print('Nice try! Try again.')
+
+# can treat more than one exception
+# except (RuntimeError, TypeError, NameError):
+
+class A(Exception):
+    pass
+
+class B(A):
+    pass
+
+class C(B):
+    pass
+
+class D(C):
+    pass
+
+for cls in [A, B, C, D]:
+    try:
+        raise cls()
+    except D:
+        print('D')
+    except C:
+        print('C')
+    # except B:
+    #     print('B')
+    except A:
+        print('A')
+
+print()
+

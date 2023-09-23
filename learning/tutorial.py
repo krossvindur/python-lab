@@ -964,3 +964,62 @@ for cls in [A, B, C, D]:
 
 print()
 
+# if arguments to the exception are needed...
+# (__str__ allows args to be printed directly,
+# but may be overriden by subclasses)
+try:
+    raise Exception('spam', 'eggs')
+except Exception as exception:
+    print(type(exception))
+    print(exception.args)
+    print(exception)
+    x, y = exception.args
+    print('x = ', x)
+    print('y = ', y)
+print()
+
+# BaseException is the mother of all, and its daughter Exception
+# is the mother of all non-fatal exceptions; those which are not
+# subclasses of Exception are unhandled
+
+# it is a good practice to be as specific as possible with the type
+# of exceptions that we intend to handle, and to allow any unexpected
+# exceptions to propagate on
+
+# the most common pattern for handling Exception is to print or log
+# the exception and then re-raise it (allowing a caller to handle
+# the exception as well)
+import sys
+try:
+    # will raise OSError
+    f = open('my_fil.txt', encoding='utf-8')
+    # will raise ValueError
+    # f = open('my_file.txt', encoding='utf-8')
+    # will raise Exception
+    # f = open('my_file.txt', encoding='utf-17')
+    s = f.readline()
+    i = int(s.strip())
+except OSError as err:
+    print('OS Error:', err)
+except ValueError:
+    print("Could not convert data to an integer.")
+except Exception as err:
+    print(f"Unexpected {err=}, {type(err)=}")
+    raise
+print()
+
+# there is the else clause, for code that must be executed
+# when the code in try runs successfully
+for arg in sys.argv[1:]:
+    try:
+        f = open(arg, 'r', encoding='utf-8')
+    except OSError:
+        print('Cannot open', arg)
+    else:
+        print(arg, 'has', len(f.readlines()), 'lines.')
+        f.close()
+print()
+
+# mind the exceptions raised by code run by functions invoked
+# in your try clause...
+

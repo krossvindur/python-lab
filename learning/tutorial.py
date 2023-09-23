@@ -1023,3 +1023,19 @@ print()
 # mind the exceptions raised by code run by functions invoked
 # in your try clause...
 
+# raise takes as argument either a subclass of BaseException or
+# an exception instance; if a class is passed, its constructor
+# will be implicitly called
+try:
+    raise ValueError
+except ValueError:
+    print('Some made up value error.\n')
+
+# if you need to determine wether an exception was raised but do not
+# intend to handle it, you can do this
+# try:
+#     raise NameError("I'm a name error!")
+# except:
+#     print("An exception was here...")
+#     raise
+

@@ -1039,3 +1039,25 @@ except ValueError:
 #     print("An exception was here...")
 #     raise
 
+# if an exception occurs during exception handling, it will be
+# attached and printed in the current except clause
+# try:
+#     open('some_file.ext')
+# except OSError:
+#     raise RuntimeError('Oh boy!...')
+
+# something useful for exception transformation
+# def func():
+#     raise ConnectionError
+
+# try:
+#     func()
+# except ConnectionError as exc:
+#     raise RuntimeError ('Cannot connect.') from exc
+
+# but exception chaining can also be disabled
+# try:
+#     open('some_file')
+# except OSError:
+#     raise RuntimeError from None
+

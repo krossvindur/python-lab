@@ -1061,3 +1061,76 @@ except ValueError:
 # except OSError:
 #     raise RuntimeError from None
 
+# cleaning up:
+# the finally clause always executes
+# exceptions raised in try and not handled by any except
+# will be re-raised after the finally block gets executed
+# as will be the case when an exception occurs in an except
+# but if finally contains break, continue or return,
+# exceptions will not be re-reaised
+# when try contains break, continue or return, finally will be
+# excecuted just before it
+# if both try and finally includes a return, the returned value
+# will be that of the finally block
+
+# whenever in the need to handle a group of exceptions
+# (the type raised will be of ExceptionGroup)
+# def f():
+#     excs = [OSError('os problem 1'), SystemError('system problem 2')]
+#     raise ExceptionGroup('some errors have occurred...', excs)
+
+# f()
+
+# this is how to treat some of the exceptions of a group
+# def f():
+#     raise ExceptionGroup(
+#         "group 1",
+#         [
+#             OSError(1),
+#             SystemError(2),
+#             ExceptionGroup(
+#                 "group 2",
+#                 [
+#                     OSError(3),
+#                     RecursionError(4)
+#                 ]
+#             )
+#         ]
+#     )
+
+# try:
+#     f()
+# except* OSError as e:
+#     print("There were some OS errors...")
+# except* SystemError as e:
+#     print("There were some system errors...")
+
+# of course, the exceptions in an exception group must be instances
+# since in practice they are the ones already raised and caught
+# by the program
+# excs = []
+# for test in tests:
+#     try:
+#         test.run()
+#     except Exception as e:
+#         excs.append(e)
+
+# if excs:
+#     raise ExceptionGroup("Test failures:", excs)
+
+# whenever handling an exception, it is possible and useful to
+# add notes to it, as needed
+# def f():
+#     raise OSError('Operation failed.')
+
+# excs = []
+# for i in range(3):
+#     try:
+#         f()
+#     except Exception as e:
+#         e.add_note(f'Happened in iteration {i+1}')
+#         excs.append(e)
+
+# raise ExceptionGroup('Oh no!', excs)
+
+# NOTE: CHAPTER 10: CLASSES

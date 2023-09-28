@@ -1159,4 +1159,30 @@ scope_test()
 print("In global scope:", spam)
 print()
 
+# class definition and instantiation
+# (if no __init__ is defined, then while the name attribute of
+# any instance is not assigned, it will inherit the one from
+# the class definition)
+class One:
+    name = 'The One'
+
+    def __init__(self, a_name):
+        self.name = a_name
+
+    def sayit(self):
+        print(self.name)
+
+print('One:', One.name)
+One.name = 'Just One'
+print('One:', One.name)
+obj1 = One('Two')
+obj1.sayit()
+obj2 = One('Three')
+obj2.sayit()
+print()
+
+# and it is also possible to
+obj2.value = 23
+print("obj2:", obj2.name, obj2.value)
+print()
 

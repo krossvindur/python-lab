@@ -1186,3 +1186,271 @@ obj2.value = 23
 print("obj2:", obj2.name, obj2.value)
 print()
 
+# about instance variables and class variables
+class Dog:
+
+    kind = 'canine'
+
+    def __init__(self, name):
+        self.name = name
+
+adm = Dog('Augustus DeMorgan')
+cvc = Dog('Carl von Clausewitz')
+
+print(adm.kind, adm.name)
+print(cvc.kind, cvc.name)
+print()
+
+# so class variables are shared; but beware mutable objects
+class Dog:
+
+    tricks = []
+
+    def __init__(self, name):
+        self.name = name
+
+    def add_trick(self, trick):
+        self.tricks.append(trick)
+
+jc = Dog('Julius Caesar')
+hl = Dog('Hanibal Lecter')
+
+jc.add_trick('sit')
+jc.add_trick('count')
+hl.add_trick('chew own ear')
+
+print(jc.name, jc.tricks)
+print(hl.name, hl.tricks)
+print()
+
+# maybe this can be a better solution
+class Dog:
+
+    def __init__(self, name):
+        self.name = name
+        self.tricks = []
+
+    def add_tricks(self, trick):
+        self.tricks.append(trick)
+
+dm = Dog('Don Melchor de Concha y Toro')
+ed = Dog('Antonio \'el Diablo\' Etchevery')
+
+dm.add_tricks('make wine')
+ed.add_tricks('load a revolver')
+ed.add_tricks('cook')
+
+print(dm.name, dm.tricks)
+print(ed.name, ed.tricks)
+print()
+
+# instance x class atributes w/ same name:
+# lookup prioritize instance's
+class Computer:
+
+    type = 'PDP7'
+
+c1 = Computer()
+c2 = Computer()
+
+print(c1.type, c2.type)
+
+c2.type = 'PDP8'
+
+print(c1.type, c2.type)
+print()
+
+# just to show that self has no special meaning in Python
+# Python will pass a reference to the object in the first argument
+# of __init__ no matter what
+class Kravatkayanovia:
+
+    kropotky = 'a-10!b'
+
+    def __init__(sebya, nasidanya):
+        sebya.nasidanya = nasidanya
+
+kravat = Kravatkayanovia('1%9(88_b)+21@ccD>1')
+
+print(kravat.kropotky, kravat.nasidanya)
+print()
+
+class A:
+
+    type = 'A'
+
+    def __init__(name):
+        print(name)
+
+a = A()
+print()
+
+class B:
+
+    type = 'B'
+
+    def __init__():
+        print('init')
+
+b = B
+print(b.type)
+b = None
+print()
+
+# if you try the code below, it will throw a TypeError saying that
+# B.__init__() takes 0 positional arguments but 1 was given
+# because whenever you do ClassName(), you implicitly call
+# ClassName.__init__(ClassName)
+# b = B()
+
+# methods need not be functions declared inside the body of a class
+# although this can be confusing to read...
+def my_sum(self):
+    return self.a+self.b
+
+class Method:
+
+    a, b = 0, 0
+    f = my_sum
+
+    def __init__(self, a, b):
+        self.a, self.b = a, b
+
+m = Method(3, 3)
+print(m.f())
+print()
+
+# inheritance
+class Animal:
+
+    type = 'wild'
+
+    def make_noise(self):
+        print(f'I am {self.subtype}!')
+
+# superclass or its module must be in same scope as subclass
+# i.e. superclass must be 'reachable' from subclass scope
+class WildCat(Animal):
+
+    def __init__(self):
+        self.subtype = 'feline'
+
+kitty = WildCat()
+print(kitty.type, kitty.subtype)
+kitty.make_noise()
+print()
+
+# multiple inheritance
+# if an atribute or method is common to all, it will be looked up
+# first in the subclass, then in the first superclass, then in
+# the second superclass and so on
+class Lion:
+
+    sound = 'roar!'
+
+class Goat:
+
+    sound = 'baaa!'
+
+class Snake:
+
+    sound = 'ssss!'
+
+class Chimera(Lion, Goat, Snake):
+
+    def __init__(self):
+        self.sound = Lion.sound + Goat.sound + Snake.sound
+
+chi = Chimera()
+print(chi.sound)
+print()
+
+# convention for private names and name mangling
+class Mapping:
+
+    def __init__(self, iterable):
+        self.items_list = []
+        self.__update(iterable)
+
+    def update(self, iterable):
+        for item in iterable:
+            self.items_list.append(item)
+
+    __update = update
+
+class MappingSubClass(Mapping):
+
+    def update(self, keys, values):
+        for item in zip(keys, values):
+            self.items_list.append(item)
+
+l = [1, 3, 5, 2]
+msc = MappingSubClass(l)
+print(msc.items_list)
+msc.update([6, 7, 9], ['x', 'd', 'c'])
+print(msc.items_list)
+print()
+
+# this is how iteration with for in python works under the hood
+# when using for, iter(obj) will be called to get a ref to
+# an object implementing next(), that will spit out the next element
+# until a StopIteration error is raised
+# that is why __iter__() in Reverse returns self: the class implements
+# a __next__() method that raises a StopIteration when it reaches
+# the end of the sequence
+class Reverse:
+    """Iterator for looping over a sequence backwards"""
+    def __init__(self, data):
+        self.data = data
+        self.index = len(data)
+
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        if self.index == 0:
+            raise StopIteration
+        self.index -= 1
+        return self.data[self.index]
+    
+rev = Reverse('spam')
+for char in rev:
+    print(char)
+print()
+
+# there's the possibility to build data classes
+from dataclasses import dataclass
+@dataclass
+class Employee:
+    name: str
+    dept: str
+    id: int
+    salary: int
+
+mary = Employee('mary', 'computer lab', 1, 14758)
+print(mary.name, mary.dept, mary.id, mary.salary)
+print()
+
+# generators can be used for creating iterators
+# but they are more compact since __iter__() and __next__()
+# are automatically created and StopIteration is automatically raised
+def reverse(data):
+    for index in range(len(data)-1, -1, -1):
+        yield data[index]
+
+for char in reverse('golf'):
+    print(char)
+print()
+
+# generator expressions are more compact but less versatile than
+# full generator definitions and tend to be more memory friendly
+# than equivalent list comprehensions
+print(sum(i*i for i in range(10)))
+xvec = [10, 20, 30]
+yvec = [7, 5, 3]
+print(sum(x*y for x,y in zip(xvec, yvec)))
+data = 'golf'
+print(list(data[i] for i in range(len(data)-1, -1, -1)))
+print()
+
+# NOTE: CHAPTER 11: FLOATING POINT & APPENDIX
